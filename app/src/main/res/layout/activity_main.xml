@@ -6,70 +6,54 @@
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp">
 
-    <ToggleButton
-        android:id="@+id/toggleButton1"
+
+    <RadioGroup
+        android:id="@+id/radioGroup1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ToggleButton" />
+        android:layout_marginTop="36dp"
+        android:layout_marginLeft="36dp"
+        android:orientation="vertical">
 
-    <ToggleButton
-        android:id="@+id/toggleButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textOn="@string/toggle_turn_on"
-        android:textOff="@string/toggle_turn_off"
-        android:checked="true" />
+        <RadioButton
+            android:id="@+id/radioButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radioButton_Text1"
+            android:textSize="24sp"
+            android:checked="true" />
 
-    <Button
-        android:id="@+id/btnDisplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_display" />
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:text="@string/radioButton_Text2" />
 
+        <RadioButton
+            android:id="@+id/radioButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:text="@string/radioButton_Text3" />
 
-    <EditText
-        android:id="@+id/edittext"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:text="@string/enter_text"
-        android:inputType="text"
-        android:background="@drawable/rounded_corner_view"/>
+    </RadioGroup>
 
 
-    <Button
-        android:id="@+id/edit_text_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="20dp"
-        android:text="@string/show_the_text" />
-
-    <AutoCompleteTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:id="@+id/auto_Complete_TextView"
-        android:hint="Auto Complete TextView"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:layout_marginTop="32dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/delaySetting"
             android:gravity="center"
-            android:textSize="20sp"
-
-            />
+            android:textSize="24sp" />
 
         <Spinner
             android:id="@+id/minutes_spinner"
@@ -87,7 +71,7 @@
             android:layout_height="wrap_content"
             android:text="@string/minutes"
             android:gravity="center"
-            android:textSize="20sp"/>
+            android:textSize="24sp" />
 
         <Spinner
             android:id="@+id/seconds_spinner"
@@ -106,95 +90,63 @@
             android:layout_height="wrap_content"
             android:text="@string/seconds"
             android:gravity="center"
-            android:textSize="20sp"/>
+            android:textSize="24sp" />
 
     </LinearLayout>
-        <Button
-            android:id="@+id/delayShutdowButtonId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/delay_Shutdown_Button_Text"
-            android:layout_gravity="center_horizontal"
-            android:onClick="delayShutdownSubmit"/>
-
-    <RadioGroup
-        android:id="@+id/radioGroup1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <RadioButton
-            android:id="@+id/radioButton1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/orangePi_text"/>
-
-        <RadioButton
-            android:id="@+id/radioButton2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/raspberryPi_text"/>
-
-        <RadioButton
-            android:id="@+id/radioButton3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/bananaPi_text"/>
-
-    </RadioGroup>
-
-    <Button
-        android:id="@+id/ClearButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/clear_Button_Text"
-        android:onClick="clearButton"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-
-        <Switch
-            android:id="@+id/switch_1"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="32dp"
-            android:showText="true"
-            android:switchMinWidth="60dp"
-            android:text="@string/switch_1_Caption"
-            android:textOff="@string/switch_Text_Off"
-            android:textOn="@string/switch_Text_On"/>
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal">
 
-        <Switch
-            android:id="@+id/switch_2"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/powerOnButtonId"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="32dp"
-            android:showText="true"
-            android:switchMinWidth="60dp"
-            android:text="@string/switch_2_Caption"
-            android:textOff="@string/switch_Text_Off"
-            android:textOn="@string/switch_Text_On" />
+            android:layout_margin="56dp"
+            android:text="@string/powerOn_Button_Text"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:textSize="24sp"
+            android:onClick="powerOnSubmit" />
 
-        <Switch
-            android:id="@+id/switch_3"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/shutdowButtonId"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="32dp"
-            android:showText="true"
-            android:switchMinWidth="60dp"
-            android:text="@string/switch_3_Caption"
-            android:textOff="@string/switch_Text_Off"
-            android:textOn="@string/switch_Text_On"/>
+            android:layout_margin="56dp"
+            android:text="@string/shutdown_Button_Text"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:textSize="24sp"
+            android:onClick="shutDownSubmit" />
+
     </LinearLayout>
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_gravity="center_horizontal"
-        android:text="V1.0" />
-        />
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:text="@string/shake"
+            android:textSize="24sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/rev"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
+    </LinearLayout>
+
 </LinearLayout>

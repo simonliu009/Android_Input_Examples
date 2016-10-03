@@ -1,29 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ToggleButtonEditTextArraySwitch</string>
-    <string name="bananaPi_text">香蕉派</string>
-    <string name="btn_display">按钮状态</string>
-    <string name="clear_Button_Text">清除选项</string>
-    <string name="delaySetting">延时设置</string>
+    <string name="app_name">灯光控制</string>
+    <string name="delaySetting">延时关灯设置:</string>
     <string name="delaySettingMinutes">延时分钟设置</string>
     <string name="delaySettingSeconds">延时秒数设置</string>
-    <string name="example_edittext"></string>
-    <string name="enter_text">在这里输入文字</string>
-    <string name="delay_Shutdown_Button_Text">延时关闭</string>
-    <string name="orangePi_text">香橙派</string>
     <string name="minutes">分</string>
-    <string name="raspberryPi_text">树莓派</string>
     <string name="seconds">秒</string>
-    <string name="show_the_text">显示文本</string>
-    <string name="switch_1_Caption">暖黄模式</string>
-    <string name="switch_1_On">灯光以暖黄模式打开</string>
-    <string name="switch_2_Caption">暖白模式</string>
-    <string name="switch_2_on">灯光以暖白模式打开</string>
-    <string name="switch_3_Caption">白光模式</string>
-    <string name="switch_3_on">灯光以白光模式打开</string>
-    <string name="switch_Text_Off">已关闭</string>
-    <string name="switch_Text_On">已打开</string>
-    <string name="switch_off">灯光已关闭</string>
-    <string name="toggle_turn_off">关闭</string>
-    <string name="toggle_turn_on">打开</string>
+    <string name="powerOnMSG">"灯光开启模式: "</string>
+    <string name="powerOn_Button_Text">开灯</string>
+    <string name="radioButton_Text1">暖黄模式</string>
+    <string name="radioButton_Text2">暖白模式</string>
+    <string name="radioButton_Text3">白光模式</string>
+    <string name="rev">版本 V1.0</string>
+    <string name="shake">摇一摇试试看</string>
+    <string name="showdownMSG">"灯光将在如下时间后关闭: "</string>
+    <string name="shutdown_Button_Text">关灯</string>
 </resources>
