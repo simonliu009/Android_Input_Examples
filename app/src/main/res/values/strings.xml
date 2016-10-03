@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">ToggleButtonEditTextArraySwitch</string>
+    <string name="toggle_turn_on">Turn On</string>
+    <string name="toggle_turn_off">Turn Off</string>
+    <string name="btn_display">Display</string>
+    <string name="action_settings">Settings</string>
+    <string name="example_edittext">Example showing EditText</string>
+    <string name="show_the_text">Show the Text</string>
+    <string name="enter_text">enter text here</string>
+    <string name="delay_Shutdown_Button_Text">Delay Shutdown</string>
+    <string name="minutes">Minutes</string>
+    <string name="seconds">Seconds</string>
+    <string name="delaySetting">Delay Setting: </string>
+    <string name="delaySettingMinutes">Delay Setting for Minutes</string>
+    <string name="delaySettingSeconds">Delay Setting for Seconds</string>
+    <string name="orangePi_text">Orange Pi</string>
+    <string name="raspberryPi_text">Raspberry Pi</string>
+    <string name="bananaPi_text">Banana Pi</string>
+    <string name="clear_Button_Text">Clear Radio Button</string>
+    <string name="switch_Text_On">Lamp on</string>
+    <string name="switch_Text_Off">Lamp off</string>
+    <string name="switch_1_On">Lamp is turned on in WarmYello mode</string>
+    <string name="switch_off">Lamp is turned off</string>
+    <string name="switch_2_on">Lamp is turned on in WarmWhite Mode</string>
+    <string name="switch_3_on">Lamp is turned on in White Mode</string>
+    <string name="switch_1_Caption">WarmYello mode</string>
+    <string name="switch_2_Caption">WarmWhite mode</string>
+    <string name="switch_3_Caption">White mode</string>
+
+</resources>
