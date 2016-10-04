@@ -3,6 +3,7 @@ package com.example.simonliu.togglebuttonedittextarrayswitch;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,8 +32,10 @@ public class MainActivity extends AppCompatActivity {
     public int delaySeconds = 0;
     public int delayResults = 0;
     public String modeMSG = "";
-    public boolean onOffCmd;
-//    public int lightModeo;
+    public boolean onCmd;
+
+    private int lightModeOld = 0;
+    private int lightModeNew;
 
 
 //
@@ -132,19 +135,19 @@ public class MainActivity extends AppCompatActivity {
 //  set lightMode =  2 because the lamp need to be turned on 2 times to be in warm yellow mode (radioButton1) ,
 //  and it is the most useful mode so it is on top and checked by default
 //  it only works for my ChangHong 3-mode LED bubble
-//                lightMode = 2;
+                lightModeNew = 2;
             }
 
             if (checkedRadioButtonId == R.id.radioButton2) {
                 RadioButton rb = (RadioButton) findViewById(R.id.radioButton2);
                 modeMSG = rb.getText().toString();
-//                lightMode = 3;
+                lightModeNew = 3;
             }
 
             if (checkedRadioButtonId == R.id.radioButton3) {
                 RadioButton rb = (RadioButton) findViewById(R.id.radioButton3);
                 modeMSG = rb.getText().toString();
-//                lightMode = 1;
+                lightModeNew = 1;
             }
 
         }
@@ -161,14 +164,31 @@ public class MainActivity extends AppCompatActivity {
 //    modeMSG = ((RadioButton)findViewById(rb.getCheckedRadioButtonId())).getText().toString();
 
     public void addListenerOnRadioButton() {
-        RadioGroup radioGroupLamp = (RadioGroup) findViewById(radioGroup1);
+        final RadioGroup radioGroupLamp = (RadioGroup) findViewById(radioGroup1);
         radioGroupLamp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RadioButton rb = (RadioButton) findViewById(checkedId);
+                int checkedRadioButtonId = radioGroupLamp.getCheckedRadioButtonId();
                 if (null != rb && checkedId > -1) {
                     modeMSG = rb.getText().toString();
                     Toast.makeText(MainActivity.this, rb.getText(), Toast.LENGTH_SHORT).show();
+
+                    if (checkedRadioButtonId == R.id.radioButton1) {
+//  set lightMode =  2 because the lamp need to be turned on 2 times to be in WarmYellow mode (radioButton1) ,
+//  and it is the most useful mode so it is on top and checked by default
+//  it only works for my ChangHong 3-mode LED bubble
+                        lightModeNew = 2;
+                    }
+
+                    if (checkedRadioButtonId == R.id.radioButton2) {
+                        lightModeNew = 3;
+                    }
+
+                    if (checkedRadioButtonId == R.id.radioButton3) {
+                        lightModeNew = 1;
+                    }
+
                 }
             }
         });
@@ -176,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public boolean addListenerOnButton() {
+    public void addListenerOnButton() {
         powerOnButton = (Button) findViewById(R.id.powerOnButtonId);
         shutdownButton = (Button) findViewById(R.id.shutdowButtonId);
 
@@ -185,9 +205,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String powerOnMessage = getString(R.string.powerOnMSG) + modeMSG;
                 Toast.makeText(MainActivity.this, powerOnMessage, Toast.LENGTH_SHORT).show();
+                onCmd = true;
                 lampCtrlUDPClient();
-                onOffCmd = true;
-
             }
         });
 
@@ -196,12 +215,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String shutdownMessage = getString(R.string.showdownMSG) + " " + delayMinutes + " " + getString(R.string.minutes) + " " + delaySeconds + " " + getString(R.string.seconds);
                 Toast.makeText(MainActivity.this, shutdownMessage, Toast.LENGTH_SHORT).show();
+                onCmd = false;
                 lampCtrlUDPClient();
-                onOffCmd = false;
             }
         });
 
-        return onOffCmd;
 
     }
 
@@ -216,6 +234,8 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    };
 
+
+    // Delay Methord
     private void myDelay(int delayMS) {
         try {
             Thread.currentThread().sleep(delayMS);//阻断delayMS (毫秒) block the thread for delayMS(in milliseconds)
@@ -254,29 +274,59 @@ public class MainActivity extends AppCompatActivity {
                     byte[] data = packetDataStringOff.getBytes(Charset.forName("UTF-8"));
                     DatagramPacket packet = new DatagramPacket(data, data.length, socketAddr);
 
-                    if (addListenerOnButton()) {
-                        //broadcast turn off command first no matter it is already on or off
-                        packet.setData(packetDataStringOff.getBytes(Charset.forName("UTF-8")));
-                        socket.send(packet);
+                    if (onCmd) {
+                        int lightModeCycle = lightModeNew - lightModeOld;
+//                        Log.v("LightModeOld", String.valueOf(lightModeOld));
+//                        Log.v("LightModeNew", String.valueOf(lightModeNew));
+//                        Log.v("LightModeCycle", String.valueOf(lightModeCycle));
+//                      当状态有变化即lightModeNew - lightModeOld 不为0时, 把它+3取模避免负数出现, 得出循环开关次数
+//                      Use % (mod) to calculate how manytimes that the LED need to be turned off/on to get to the correct mode
+                        if (lightModeCycle != 0) {
+                            lightModeCycle += 3;
+                            lightModeCycle %= 3;
+//                           Log.v("LightModeCycle Mod()", String.valueOf(lightModeCycle));
+                            int i;
+                            for (i = 0; i < lightModeCycle; i++) {
+                                //                                broadcast turn off command
+                                packet.setData(packetDataStringOff.getBytes(Charset.forName("UTF-8")));
+                                socket.send(packet);
+                                // 线程阻断 block the thread for 500ms
+                                myDelay(500);
 
-                        // 线程阻断 block the thread
-                        myDelay(500);
+                                //                              broadcast turn on command
+                                packet.setData(packetDataStringOn.getBytes(Charset.forName("UTF-8")));
+                                socket.send(packet);
+                                myDelay(500);
+                            }
+//                           update the lightModeOld value to the latest state
+                            lightModeOld = lightModeNew;
+//                           Log.v("LightModeOld Update", String.valueOf(lightModeOld));
+                        } else {
+                            return;
+                        }
 
-//                         发送数据开灯一次 broadcast the packet to turn on the LED for the 1st time
-                        packet.setData(packetDataStringOn.getBytes(Charset.forName("UTF-8")));
-                        socket.send(packet);
-
-                        myDelay(500);
-
-                        // 再次发送数据关灯 broadcast the packet to turn off the LED after 300ms
-                        packet.setData(packetDataStringOff.getBytes(Charset.forName("UTF-8")));
-                        socket.send(packet);
-
-                        myDelay(500);
-
-//                         再次发送数据开灯第二次 broadcast the packet to turn on the LED for the 2nd time
-                        packet.setData(packetDataStringOn.getBytes(Charset.forName("UTF-8")));
-                        socket.send(packet);
+//                        //broadcast turn off command first no matter it is already on or off
+//                        packet.setData(packetDataStringOff.getBytes(Charset.forName("UTF-8")));
+//                        socket.send(packet);
+//
+//                        // 线程阻断 block the thread
+//                        myDelay(500);
+//
+////                         发送数据开灯一次 broadcast the packet to turn on the LED for the 1st time
+//                        packet.setData(packetDataStringOn.getBytes(Charset.forName("UTF-8")));
+//                        socket.send(packet);
+//
+//                        myDelay(500);
+//
+//                        // 再次发送数据关灯 broadcast the packet to turn off the LED after 300ms
+//                        packet.setData(packetDataStringOff.getBytes(Charset.forName("UTF-8")));
+//                        socket.send(packet);
+//
+//                        myDelay(500);
+//
+////                         再次发送数据开灯第二次 broadcast the packet to turn on the LED for the 2nd time
+//                        packet.setData(packetDataStringOn.getBytes(Charset.forName("UTF-8")));
+//                        socket.send(packet);
 
 
                     }
@@ -285,6 +335,8 @@ public class MainActivity extends AppCompatActivity {
 
                         packet.setData(packetDataStringDelayOff.getBytes(Charset.forName("UTF-8")));
                         socket.send(packet);
+                        lightModeOld = 0;
+                        Log.v("LightModeOld Shutdown", String.valueOf(lightModeOld));
 
                     }
 
