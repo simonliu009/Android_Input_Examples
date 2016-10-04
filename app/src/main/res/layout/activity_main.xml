@@ -12,7 +12,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
-        android:layout_marginLeft="36dp"
         android:orientation="vertical">
 
         <RadioButton
@@ -43,6 +42,7 @@
 
 
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,12 +54,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/delaySetting"
-            android:gravity="center"
-            android:textSize="24sp" />
+            android:layout_gravity="left"
+            android:textSize="16sp" />
 
         <Spinner
             android:id="@+id/minutes_spinner"
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="20dp"
@@ -73,16 +73,16 @@
             android:layout_height="wrap_content"
             android:text="@string/minutes"
             android:gravity="center"
-            android:textSize="24sp" />
+            android:textSize="16sp" />
 
         <Spinner
             android:id="@+id/seconds_spinner"
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="20dp"
-            android:spinnerMode="dropdown"
-            android:dropDownWidth="100dp"
+            android:spinnerMode="dialog"
+            android:prompt="@string/delaySettingSeconds"
             android:entries="@array/delaySettingsArray"
             >
         </Spinner>
@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:text="@string/seconds"
             android:gravity="center"
-            android:textSize="24sp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 
@@ -106,17 +106,16 @@
             android:id="@+id/powerOnButtonId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="56dp"
             android:text="@string/powerOn_Button_Text"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
+            android:layout_margin="16dp"
             android:textSize="24sp" />
 
         <Button
             android:id="@+id/shutdowButtonId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="56dp"
             android:text="@string/shutdown_Button_Text"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
