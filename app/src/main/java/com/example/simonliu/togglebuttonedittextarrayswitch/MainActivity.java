@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                     }
-// When click power off button, the turn off command with delayResults is broadcast
+// When click power off button, broadcast the turn off command with delayResults
                     else {
 
                         packet.setData(packetDataStringDelayOff.getBytes(Charset.forName("UTF-8")));
