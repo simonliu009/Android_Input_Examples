@@ -55,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
         modeMSG = getDefaultCheckedRBText();
 
 
-        //        Integer[] delayOptions = new Integer[] {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59}
-//res.getIntArray(R.array.delaySettingsArray) is the int[] array get from resources but we need to convert it to Integer[]
+        //     Integer[] delayOptions = new Integer[] {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59}
+//      res.getIntArray(R.array.delaySettingsArray) is the int[] array get from resources but we need to convert it to Integer[]
         Resources res = getResources();
         final Integer[] delayOptions = new Integer[res.getIntArray(R.array.delaySettingsArray).length];
         for (int i = 0; i < res.getIntArray(R.array.delaySettingsArray).length; i++) {
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                 int checkedRadioButtonId = radioGroupLamp.getCheckedRadioButtonId();
                 if (null != rb && checkedId > -1) {
                     modeMSG = rb.getText().toString();
-                    Toast.makeText(MainActivity.this, rb.getText(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this, rb.getText(), Toast.LENGTH_SHORT).show();
 
                     if (checkedRadioButtonId == R.id.radioButton1) {
 //  set lightMode =  2 because the lamp need to be turned on 2 times to be in WarmYellow mode (radioButton1) ,
@@ -280,23 +280,24 @@ public class MainActivity extends AppCompatActivity {
 //                        Log.v("LightModeNew", String.valueOf(lightModeNew));
 //                        Log.v("LightModeCycle", String.valueOf(lightModeCycle));
 //                      当状态有变化即lightModeNew - lightModeOld 不为0时, 把它+3取模避免负数出现, 得出循环开关次数
-//                      Use % (mod) to calculate how manytimes that the LED need to be turned off/on to get to the correct mode
+//                      Use % (mod) to calculate how many times that the LED need to be turned off/on to get to the correct mode
                         if (lightModeCycle != 0) {
                             lightModeCycle += 3;
                             lightModeCycle %= 3;
 //                           Log.v("LightModeCycle Mod()", String.valueOf(lightModeCycle));
                             int i;
                             for (i = 0; i < lightModeCycle; i++) {
+//                                Log.v("i = ", String.valueOf(i));
                                 //                                broadcast turn off command
                                 packet.setData(packetDataStringOff.getBytes(Charset.forName("UTF-8")));
                                 socket.send(packet);
                                 // 线程阻断 block the thread for 500ms
-                                myDelay(500);
+                                myDelay(800);
 
                                 //                              broadcast turn on command
                                 packet.setData(packetDataStringOn.getBytes(Charset.forName("UTF-8")));
                                 socket.send(packet);
-                                myDelay(500);
+                                myDelay(800);
                             }
 //                           update the lightModeOld value to the latest state
                             lightModeOld = lightModeNew;

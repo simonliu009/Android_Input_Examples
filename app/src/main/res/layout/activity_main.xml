@@ -139,13 +139,6 @@
             android:text="@string/shake"
             android:textSize="24sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/rev"
-            android:textSize="16sp"
-            android:layout_marginBottom="16dp" />
     </LinearLayout>
 
 </LinearLayout>
