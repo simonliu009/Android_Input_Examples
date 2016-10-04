@@ -12,6 +12,13 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.nio.charset.Charset;
+
 import static com.example.simonliu.togglebuttonedittextarrayswitch.R.id.radioGroup1;
 
 
@@ -24,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     public int delaySeconds = 0;
     public int delayResults = 0;
     public String modeMSG = "";
+    public boolean onOffCmd;
+//    public int lightModeo;
 
 
 //
@@ -120,51 +129,34 @@ public class MainActivity extends AppCompatActivity {
             if (checkedRadioButtonId == R.id.radioButton1) {
                 RadioButton rb = (RadioButton) findViewById(R.id.radioButton1);
                 modeMSG = rb.getText().toString();
+//  set lightMode =  2 because the lamp need to be turned on 2 times to be in warm yellow mode (radioButton1) ,
+//  and it is the most useful mode so it is on top and checked by default
+//  it only works for my ChangHong 3-mode LED bubble
+//                lightMode = 2;
             }
 
             if (checkedRadioButtonId == R.id.radioButton2) {
                 RadioButton rb = (RadioButton) findViewById(R.id.radioButton2);
                 modeMSG = rb.getText().toString();
+//                lightMode = 3;
             }
 
             if (checkedRadioButtonId == R.id.radioButton3) {
                 RadioButton rb = (RadioButton) findViewById(R.id.radioButton3);
                 modeMSG = rb.getText().toString();
+//                lightMode = 1;
             }
 
         }
         return modeMSG;
-//        Below codes work but need to be changed when the default checked item is not radioButton1
+    }
+//        Below codes also work but need to be changed when the default checked item is not radioButton1
 //        RadioButton rb = (RadioButton) findViewById(R.id.radioButton1);
 //        String modeMSG = rb.getText().toString();
 //        return modeMSG;
-    }
 
 
-    public void addListenerOnButton() {
-        powerOnButton = (Button) findViewById(R.id.powerOnButtonId);
-        shutdownButton = (Button) findViewById(R.id.shutdowButtonId);
-
-        powerOnButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String powerOnMessage = getString(R.string.powerOnMSG) + modeMSG;
-                Toast.makeText(MainActivity.this, powerOnMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        shutdownButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String shutdownMessage = getString(R.string.showdownMSG) + " " + delayMinutes + " " + getString(R.string.minutes) + " " + delaySeconds + " " + getString(R.string.seconds);
-                Toast.makeText(MainActivity.this, shutdownMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-    }
-
-//Another way to get the checkedID text to String
+    //Another way to get the checkedID text to String
 //    RadioGroup rb = (RadioGroup)findViewById(R.id.radioGroup1);
 //    modeMSG = ((RadioButton)findViewById(rb.getCheckedRadioButtonId())).getText().toString();
 
@@ -181,6 +173,131 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+
+    public boolean addListenerOnButton() {
+        powerOnButton = (Button) findViewById(R.id.powerOnButtonId);
+        shutdownButton = (Button) findViewById(R.id.shutdowButtonId);
+
+        powerOnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String powerOnMessage = getString(R.string.powerOnMSG) + modeMSG;
+                Toast.makeText(MainActivity.this, powerOnMessage, Toast.LENGTH_SHORT).show();
+                lampCtrlUDPClient();
+                onOffCmd = true;
+
+            }
+        });
+
+        shutdownButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String shutdownMessage = getString(R.string.showdownMSG) + " " + delayMinutes + " " + getString(R.string.minutes) + " " + delaySeconds + " " + getString(R.string.seconds);
+                Toast.makeText(MainActivity.this, shutdownMessage, Toast.LENGTH_SHORT).show();
+                lampCtrlUDPClient();
+                onOffCmd = false;
+            }
+        });
+
+        return onOffCmd;
+
+    }
+
+//    private Handler mHandler = new Handler();
+//    private Runnable mUpdateTimeTask = new Runnable() {
+//        public void run() {
+//            // Do some stuff that you want to do here
+//
+//            // You could do this call if you wanted it to be periodic:
+//            mHandler.postDelayed(this, 5000 );
+//
+//        }
+//    };
+
+    private void myDelay(int delayMS) {
+        try {
+            Thread.currentThread().sleep(delayMS);//阻断delayMS (毫秒) block the thread for delayMS(in milliseconds)
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    ;
+
+    private void lampCtrlUDPClient() {
+        final String brCastIP = "255.255.255.255";
+        final int remotePort = 8267;
+        final int localPort = 8266;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                DatagramSocket socket = null;
+                try {
+                    // 1、创建套接字 create the DatagramSocket
+                    socket = new DatagramSocket(localPort);
+
+                    // 2、创建host的地址包装实例 create the socket address instance with host address and port
+                    SocketAddress socketAddr = new InetSocketAddress(brCastIP, remotePort);
+
+
+                    String packetDataStringOn = "LAMPON";
+                    String packetDataStringOff = "LAMPOFF";
+                    // Add delayResults to the packetData string so that the remote server could handle the delay itself
+                    String packetDataStringDelayOff = "LAMPOFF" + delayResults;
+
+                    // 3、创建数据报。包含要发送的数据、与目标主机地址 create the DatagramPacket with the data to send
+                    // the data is set here but it is actually changed below when using it
+                    byte[] data = packetDataStringOff.getBytes(Charset.forName("UTF-8"));
+                    DatagramPacket packet = new DatagramPacket(data, data.length, socketAddr);
+
+                    if (addListenerOnButton()) {
+                        //broadcast turn off command first no matter it is already on or off
+                        packet.setData(packetDataStringOff.getBytes(Charset.forName("UTF-8")));
+                        socket.send(packet);
+
+                        // 线程阻断 block the thread
+                        myDelay(500);
+
+//                         发送数据开灯一次 broadcast the packet to turn on the LED for the 1st time
+                        packet.setData(packetDataStringOn.getBytes(Charset.forName("UTF-8")));
+                        socket.send(packet);
+
+                        myDelay(500);
+
+                        // 再次发送数据关灯 broadcast the packet to turn off the LED after 300ms
+                        packet.setData(packetDataStringOff.getBytes(Charset.forName("UTF-8")));
+                        socket.send(packet);
+
+                        myDelay(500);
+
+//                         再次发送数据开灯第二次 broadcast the packet to turn on the LED for the 2nd time
+                        packet.setData(packetDataStringOn.getBytes(Charset.forName("UTF-8")));
+                        socket.send(packet);
+
+
+                    }
+// When click power off button, the turn off command with delayResults is broadcast
+                    else {
+
+                        packet.setData(packetDataStringDelayOff.getBytes(Charset.forName("UTF-8")));
+                        socket.send(packet);
+
+                    }
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (null != socket) {
+                        socket.close();
+                    }
+                }
+            }
+        }).start();
     }
 
 
