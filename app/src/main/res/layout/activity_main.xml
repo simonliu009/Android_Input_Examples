@@ -28,14 +28,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24sp"
-            android:text="@string/radioButton_Text2" />
+            android:text="@string/radioButton_Text2"
+            android:checked="false" />
 
         <RadioButton
             android:id="@+id/radioButton3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="24sp"
-            android:text="@string/radioButton_Text3" />
+            android:text="@string/radioButton_Text3"
+            android:checked="false" />
 
     </RadioGroup>
 
@@ -108,8 +110,7 @@
             android:text="@string/powerOn_Button_Text"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
-            android:textSize="24sp"
-            android:onClick="powerOnSubmit" />
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/shutdowButtonId"
@@ -119,8 +120,7 @@
             android:text="@string/shutdown_Button_Text"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
-            android:textSize="24sp"
-            android:onClick="shutDownSubmit" />
+            android:textSize="24sp" />
 
     </LinearLayout>
 

@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         addListenerOnButton();
         addListenerOnRadioButton();
-        modeMSG = getRadioButton1Text();
+        modeMSG = getDefaultCheckedRBText();
 
 
         //        Integer[] delayOptions = new Integer[] {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59}
@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
                 return;
             }
+
         });
 
         secondsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -109,10 +110,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public String getRadioButton1Text() {
-        RadioButton rb = (RadioButton) findViewById(R.id.radioButton1);
-        String modeMSG = rb.getText().toString();
+    public String getDefaultCheckedRBText() {
+        RadioGroup radioGroupLamp = (RadioGroup) findViewById(radioGroup1);
+        int checkedRadioButtonId = radioGroupLamp.getCheckedRadioButtonId();
+        String modeMSG = "";
+        if (checkedRadioButtonId == -1) {
+            Toast.makeText(MainActivity.this, "Please set checked=true in one of the radio button in activity_main.xml", Toast.LENGTH_SHORT).show();
+        } else {
+            if (checkedRadioButtonId == R.id.radioButton1) {
+                RadioButton rb = (RadioButton) findViewById(R.id.radioButton1);
+                modeMSG = rb.getText().toString();
+            }
+
+            if (checkedRadioButtonId == R.id.radioButton2) {
+                RadioButton rb = (RadioButton) findViewById(R.id.radioButton2);
+                modeMSG = rb.getText().toString();
+            }
+
+            if (checkedRadioButtonId == R.id.radioButton3) {
+                RadioButton rb = (RadioButton) findViewById(R.id.radioButton3);
+                modeMSG = rb.getText().toString();
+            }
+
+        }
         return modeMSG;
+//        Below codes work but need to be changed when the default checked item is not radioButton1
+//        RadioButton rb = (RadioButton) findViewById(R.id.radioButton1);
+//        String modeMSG = rb.getText().toString();
+//        return modeMSG;
     }
 
 
@@ -144,8 +169,8 @@ public class MainActivity extends AppCompatActivity {
 //    modeMSG = ((RadioButton)findViewById(rb.getCheckedRadioButtonId())).getText().toString();
 
     public void addListenerOnRadioButton() {
-        RadioGroup radioGroupPi = (RadioGroup) findViewById(radioGroup1);
-        radioGroupPi.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        RadioGroup radioGroupLamp = (RadioGroup) findViewById(radioGroup1);
+        radioGroupLamp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RadioButton rb = (RadioButton) findViewById(checkedId);
