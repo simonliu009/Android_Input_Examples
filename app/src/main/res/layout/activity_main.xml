@@ -104,7 +104,7 @@
 
         <Button
             android:id="@+id/powerOnButtonId"
-            android:layout_width="wrap_content"
+            android:layout_width="240dp"
             android:layout_height="wrap_content"
             android:text="@string/powerOn_Button_Text"
             android:layout_gravity="center_horizontal"
@@ -114,7 +114,7 @@
 
         <Button
             android:id="@+id/shutdowButtonId"
-            android:layout_width="wrap_content"
+            android:layout_width="240dp"
             android:layout_height="wrap_content"
             android:text="@string/shutdown_Button_Text"
             android:layout_gravity="center_horizontal"
