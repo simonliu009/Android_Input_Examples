@@ -13,5 +13,6 @@
     <string name="shake">Shake It!</string>
     <string name="showdownMSG">Lamp will be shutdown after : </string>
     <string name="powerOnMSG">Lamp will be turned on in </string>
-    <string name="rev">Rev 1.1 Build 20161004.20.37</string>
+    <string name="version_name">Version Name</string>
+    <string name="version_code">Version Code</string>
 </resources>

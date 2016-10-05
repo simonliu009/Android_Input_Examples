@@ -1,13 +1,7 @@
 apply plugin: 'com.android.application'
 
-def pattern = "-(\\d+)-g"
-def matcher = version =~ pattern
-
-if (matcher) {
-    version = version.substring(0, matcher.start()) + "." + matcher[0][1]
-} else {
-    version = version + ".0"
-}
+def cmd = 'git rev-list HEAD --count'
+def gitVersion = cmd.execute().text.trim().toInteger()
 
 android {
     compileSdkVersion 24
@@ -16,8 +10,8 @@ android {
         applicationId "com.example.simonliu.togglebuttonedittextarrayswitch"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 1
-        versionName version
+        versionCode gitVersion
+        versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -25,6 +19,8 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+
     }
 }
 
