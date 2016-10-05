@@ -11,7 +11,6 @@
     <string name="radioButton_Text1">暖黄模式</string>
     <string name="radioButton_Text2">暖白模式</string>
     <string name="radioButton_Text3">白光模式</string>
-    <string name="rev">版本 V1.0 Build 20161004.20.37</string>
     <string name="shake">摇一摇试试看</string>
     <string name="showdownMSG">"灯光将在如下时间后关闭: "</string>
     <string name="shutdown_Button_Text">关灯</string>

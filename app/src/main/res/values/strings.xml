@@ -15,4 +15,5 @@
     <string name="powerOnMSG">Lamp will be turned on in </string>
     <string name="version_name">Version Name</string>
     <string name="version_code">Version Code</string>
+    <string name="rev">Rev: </string>
 </resources>

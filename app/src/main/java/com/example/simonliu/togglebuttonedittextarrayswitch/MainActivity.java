@@ -388,8 +388,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void displayVersionName() {
         TextView versionName = (TextView) findViewById(R.id.version_name_id);
-        String version1 = getResources().getString(R.string.version_code) + "  " + getVersionCode(MainActivity.this);
-        versionName.setText(version1);
+        String rev = getResources().getString(R.string.rev) + getVersionName(MainActivity.this) + "." + getVersionCode(MainActivity.this);
+        versionName.setText(rev);
     }
 
 //    public void shutdownSubmit(View view) {
