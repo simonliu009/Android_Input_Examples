@@ -4,6 +4,12 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -32,16 +38,22 @@ public class MainActivity extends AppCompatActivity {
     private Button powerOnButton;
     private Button shutdownButton;
 
-    public int delayMinutes = 0;
-    public int delaySeconds = 0;
-    public int delayResults = 0;
-    public String modeMSG = "";
-    public boolean onCmd;
+    private int delayMinutes = 0;
+    private int delaySeconds = 0;
+    private int delayResults = 0;
+    private String modeMSG = "";
+    private boolean onCmd;
 
     private static int lightModeOld = 0;
     private int lightModeNew;
 
+    private SensorManager mSensorManager;
+    private float mAccel; // acceleration apart from gravity
+    private float mAccelCurrent; // current acceleration including gravity
+    private float mAccelLast; // last acceleration including gravity
 
+    SoundPool mSoundPool;
+    int mSoundId;
 //
 //    private static final Integer[] delayOptions={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60};
 //    private TextView minutesView;
@@ -58,6 +70,28 @@ public class MainActivity extends AppCompatActivity {
         addListenerOnRadioButton();
         modeMSG = getDefaultCheckedRBText();
         displayVersionName();
+
+//Code for shakeEventListener
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        mAccel = 0.00f;
+        mAccelCurrent = SensorManager.GRAVITY_EARTH;
+        mAccelLast = SensorManager.GRAVITY_EARTH;
+
+
+
+                /*摇一摇音效*/
+                /*public SoundPool(int maxStream, int StreamType, int srcuality)
+                maxStream —— 同时播放的流的最大数量，即同时能播放音乐的数量上限,具体理解讲看完后文
+                streamType —— 流的类型，一般都是使用AudioManager.STREAM_MUSIC,表示可以重复播放
+                srcQuality —— 采样率转化质量，但是现在该功能还不生效，可能以后的Android版本会起作用吧，建意用0*/
+        mSoundPool = new SoundPool(1, AudioManager.STREAM_SYSTEM, 0);
+                /*int load(Context context, int resId, int priority)
+                参数Context context:略
+                参数resId:代表资源文件中的音乐文件，如/res/raw/dingdong.ogg文件
+                参数int priority:API中指出，该参数目前没有效果，建议设置为1。*/
+        mSoundId = mSoundPool.load(this, R.raw.shakeit, 1); //第二个参数是音乐资源文件
+
 
 
         //     Integer[] delayOptions = new Integer[] {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59}
@@ -311,30 +345,6 @@ public class MainActivity extends AppCompatActivity {
                             return;
                         }
 
-//                        //broadcast turn off command first no matter it is already on or off
-//                        packet.setData(packetDataStringOff.getBytes(Charset.forName("UTF-8")));
-//                        socket.send(packet);
-//
-//                        // 线程阻断 block the thread
-//                        myDelay(500);
-//
-////                         发送数据开灯一次 broadcast the packet to turn on the LED for the 1st time
-//                        packet.setData(packetDataStringOn.getBytes(Charset.forName("UTF-8")));
-//                        socket.send(packet);
-//
-//                        myDelay(500);
-//
-//                        // 再次发送数据关灯 broadcast the packet to turn off the LED after 300ms
-//                        packet.setData(packetDataStringOff.getBytes(Charset.forName("UTF-8")));
-//                        socket.send(packet);
-//
-//                        myDelay(500);
-//
-////                         再次发送数据开灯第二次 broadcast the packet to turn on the LED for the 2nd time
-//                        packet.setData(packetDataStringOn.getBytes(Charset.forName("UTF-8")));
-//                        socket.send(packet);
-
-
                     }
 // When click power off button, broadcast the turn off command with delayResults
                     else {
@@ -399,6 +409,66 @@ public class MainActivity extends AppCompatActivity {
 //        Toast.makeText(MainActivity.this, shutdownMessage, Toast.LENGTH_SHORT).show();
 //
 //    }
+
+    //    Code for shakeEventListener
+    private final SensorEventListener mSensorListener = new SensorEventListener() {
+
+
+        public void onSensorChanged(SensorEvent se) {
+            float x = se.values[0];
+            float y = se.values[1];
+            float z = se.values[2];
+            mAccelLast = mAccelCurrent;
+            mAccelCurrent = (float) Math.sqrt((double) (x * x + y * y + z * z));
+            float delta = mAccelCurrent - mAccelLast;
+            mAccel = mAccel * 0.9f + delta; // perform low-cut filter
+
+
+            if (mAccel > 12) {
+//                Toast toast = Toast.makeText(getApplicationContext(), "Device has shaken.", Toast.LENGTH_LONG);
+//                toast.show();
+                 /*播放摇一摇音效*/
+                mSoundPool.play(mSoundId, 1, 1, 1, 0, 1);//播放声音
+
+//                send shutdown cmd by UDP, but if it is shaking to fast then it won't work
+                myDelay(500);
+                onCmd = !onCmd;
+                lampCtrlUDPClient();
+
+//                if (lightModeOld != 0) {
+//                    onCmd = false;
+//                    lampCtrlUDPClient();
+//                }
+//                else {
+//                    onCmd = true;
+//                    lampCtrlUDPClient();
+//                }
+
+            }
+        }
+
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        mSoundPool = new SoundPool(1, AudioManager.STREAM_SYSTEM, 0);
+        mSoundPool.load(this, R.raw.shakeit, 1);
+    }
+
+    @Override
+    protected void onPause() {
+        mSensorManager.unregisterListener(mSensorListener);
+        /*离开界面释放音频资源*/
+        mSoundPool.unload(mSoundId);
+        super.onPause();
+
+    }
+
+
 
 }
 
