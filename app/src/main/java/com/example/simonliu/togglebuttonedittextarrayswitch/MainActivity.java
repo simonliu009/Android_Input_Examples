@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     public String modeMSG = "";
     public boolean onCmd;
 
-    private int lightModeOld = 0;
+    private static int lightModeOld = 0;
     private int lightModeNew;
 
 
