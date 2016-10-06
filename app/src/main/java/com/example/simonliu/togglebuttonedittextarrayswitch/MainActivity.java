@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 //                delayMinutes = i ;
 
                 delayMinutes = Integer.valueOf(delayOptions[i]);
-                delayResults = delayMinutes * 60 + delaySeconds;
+                delayResults = (delayMinutes * 60 + delaySeconds) * 1000;
 //                Toast.makeText(MainActivity.this, "Delay Setting for Minutes " + delayMinutes + " Minutes", Toast.LENGTH_SHORT).show();
 //                Toast.makeText(MainActivity.this, "Delay Setting for Seconds: " + delaySeconds + " Seconds", Toast.LENGTH_SHORT).show();
 //                Toast.makeText(MainActivity.this, "Delay Final Results: " + delayResults + " Seconds in Total", Toast.LENGTH_SHORT).show();
@@ -348,7 +348,6 @@ public class MainActivity extends AppCompatActivity {
                     }
 // When click power off button, broadcast the turn off command with delayResults
                     else {
-
                         packet.setData(packetDataStringDelayOff.getBytes(Charset.forName("UTF-8")));
                         myDelay(delayResults);
                         socket.send(packet);
