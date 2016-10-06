@@ -142,10 +142,10 @@ public class MainActivity extends AppCompatActivity {
 //                }
 //                delaySeconds = i;
                 delaySeconds = Integer.valueOf(delayOptions[i]);
-                delayResults = delayMinutes * 60 + delaySeconds;
+                delayResults = (delayMinutes * 60 + delaySeconds) * 1000;
 //                Toast.makeText(MainActivity.this, "Delay Setting for Minutes " + delayMinutes + " Minutes", Toast.LENGTH_SHORT).show();
 //                Toast.makeText(MainActivity.this, "Delay Setting for Seconds: " + delaySeconds + " Seconds", Toast.LENGTH_SHORT).show();
-//                Toast.makeText(MainActivity.this, "Delay Final Results: " + delayResults + " Seconds in Total", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Delay Final Results: " + delayResults + " ms in Total", Toast.LENGTH_SHORT).show();
             }
 
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -350,6 +350,7 @@ public class MainActivity extends AppCompatActivity {
                     else {
 
                         packet.setData(packetDataStringDelayOff.getBytes(Charset.forName("UTF-8")));
+                        myDelay(delayResults);
                         socket.send(packet);
                         lightModeOld = 0;
                         Log.v("LightModeOld Shutdown", String.valueOf(lightModeOld));
