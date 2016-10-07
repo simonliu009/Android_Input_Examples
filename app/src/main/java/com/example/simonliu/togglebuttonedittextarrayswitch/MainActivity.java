@@ -322,7 +322,11 @@ public class MainActivity extends AppCompatActivity {
 //                      Use % (mod) to calculate how many times that the LED need to be turned off/on to get to the correct mode
                         if (lightModeCycle != 0) {
                             lightModeCycle += 3;
-                            lightModeCycle %= 3;
+                            if (lightModeCycle == 6) {
+                                lightModeCycle = 3;
+                            } else {
+                                lightModeCycle %= 3;
+                            }
 //                           Log.v("LightModeCycle Mod()", String.valueOf(lightModeCycle));
                             int i;
                             for (i = 0; i < lightModeCycle; i++) {
